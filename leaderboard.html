@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Game 1 Score</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script type="module">
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+
+        const db = getFirestore();
+
+        async function fetchScores() {
+            const scoresSnapshot = await getDocs(collection(db, "scores"));
+            const leaderboard = document.querySelector("#leaderboard tbody");
+            scoresSnapshot.docs.forEach(doc => {
+                const data = doc.data();
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${doc.id}</td><td>${data.game1 || 0}</td>`;
+                leaderboard.appendChild(row);
+            });
+        }
+
+        fetchScores();
+    </script>
+</body>
+</html>
